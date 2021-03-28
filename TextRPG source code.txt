@@ -1,0 +1,480 @@
+//Joshua To
+//January, 2018
+//This program is a text based role playing game where the player moves through a series
+//of rooms attempting to use items to unlock new weapons to fight more difficult monsters
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CulminatingAssignment
+{
+    class Program
+    {
+        //stores each item the player has
+        static string[] itemsInventory = new string[TOTAL_NUMBER_OF_ROOMS];
+        //stores the string value of every item in the game
+        static string[] itemList = new string[TOTAL_NUMBER_OF_ROOMS];
+        //stores the item that is meant to be used in that room
+        static string[] itemToBeUsed = new string[TOTAL_NUMBER_OF_ROOMS];
+        //stores what happens after an item is used
+        static string[] itemResult = new string[TOTAL_NUMBER_OF_ROOMS];
+        //stores the item presently being used
+        static string itemUsed;
+
+        //stores how many items in your inventory
+        static int inventorySize = 0;
+
+        //stores the item the player has
+        static int weapon = 0;
+
+        //stores the string value of every monster in the game
+        static string[] monsterNames = new string[TOTAL_NUMBER_OF_ROOMS];
+
+        //The maximum health for player
+        const int MAX_HEALTH = 20;
+        //stores the amount of health the player has
+        static int health = MAX_HEALTH;
+
+        //declares the base monster health and attack
+        const int BASE_MONSTER_HEALTH = 10;
+        const int MONSTER_ATTACK = 4;
+
+        //declares the total number of rooms in the game
+        const int TOTAL_NUMBER_OF_ROOMS = 10;
+
+        //stores the room number that the player is in
+        static int roomNumber = 1;
+
+        //Array to hold all the descriptions of the rooms
+        static string[] stories = new string[TOTAL_NUMBER_OF_ROOMS];
+
+        //stores the names of all the weapons in the game
+        static string[] weaponNames = new string[10];
+        //stores the attack value of each weapon in the game
+        static int[] weaponStats = new int[10];
+
+        static void Main(string[] args)
+        {
+            SetupItemList();
+            SetupItemToBeUsed();
+            SetupMonsterNames();
+            SetupWeaponNames();
+            SetupWeaponStats();
+            SetupStories();
+            SetupItemResult();
+            Console.WriteLine("Welcome to GenericRPG.com \r\nBe prepared to explore the depths of the dungeon and fight your way to victory!\r\n" +
+                "Pick up new weapons and items to unlock the secrets of the dungeon\r\nHere is a stick to begin your adventure!");
+            bool gameRunning = true;
+            //while the game is running and the room is less than or equal to 10, and the player's
+            //health is greater than 0, let the user choose between the two options
+            do
+            {
+                GameInterface();
+            } while (gameRunning == true && roomNumber <= 10 && health > 0);
+        }
+        //set up the names of every item in the game
+        static void SetupItemList()
+        {
+            //break glass box
+            itemList[0] = "rock";
+            //gives special vision
+            itemList[1] = "green cookie";
+            //useless
+            itemList[2] = "block of iron";
+            //illuminate a portion of the room
+            itemList[3] = "torch";
+            //give to goblin
+            itemList[4] = "gold coin";
+            //climb down a pit
+            itemList[5] = "rope";
+            //shatter a wall of rock
+            itemList[6] = "horn";
+            //lets you go into a small tunnel
+            itemList[7] = "shrinking potion";
+            //useless
+            itemList[8] = "vile of water";
+            //DONT unlock the ultimate sword
+            itemList[9] = "mysterious talisman";
+        }
+        //sets up the item that is supposed to be used in each room
+        static void SetupItemToBeUsed()
+        {
+            itemToBeUsed[0] = "rock";
+            itemToBeUsed[1] = "green cookie";
+            itemToBeUsed[2] = "torch";
+            itemToBeUsed[3] = "gold coin";
+            itemToBeUsed[4] = "rope";
+            itemToBeUsed[5] = "horn";
+            itemToBeUsed[6] = "shrinking potion";
+        }
+        //sets up the stories for what happens after an item is successfully used
+        static void SetupItemResult()
+        {
+            itemResult[0] = "The glass box shattered. You found a spiked club!";
+            itemResult[1] = "You ate one bite of the cookie. The cookie gave you special vision that lets you see a chest. You discover a shiny long sword!";
+            itemResult[2] = "The dark area of the room has been illuminated. You found a warhammer!";
+            itemResult[3] = "The goblin eagerly took the coin. You found a morningstar! You then kill the goblin with the mace and get the coin back.";
+            itemResult[4] = "You climb down the pit. You found a dark spear!";
+            itemResult[5] = "The magical horn shatters the wall of rock. You found a shock whip";
+            itemResult[6] = "You crawled through the tunnel and found the dagger of sacrifice! You then crawl out, and the potion fades away.";
+        }
+        //set up the names of all the monsters
+        static void SetupMonsterNames()
+        {
+            monsterNames[0] = "mutant rat";
+            monsterNames[1] = "skeleton warrior";
+            monsterNames[2] = "giant spider";
+            monsterNames[3] = "man-wolf";
+            monsterNames[4] = "ice dragon";
+            monsterNames[5] = "wraith";
+            monsterNames[6] = "obsidian golem";
+            monsterNames[7] = "lightning elemental";
+            monsterNames[8] = "cthulu";
+            monsterNames[9] = "ultimate anime god of life and death";
+        }
+        //sets up the names of all the weapons
+        static void SetupWeaponNames()
+        {
+            weaponNames[0] = "stick";
+            weaponNames[1] = "dagger";
+            weaponNames[2] = "spiked club";
+            weaponNames[3] = "long sword";
+            weaponNames[4] = "warhammer";
+            weaponNames[5] = "morningstar";
+            weaponNames[6] = "dark spear";
+            weaponNames[7] = "shock whip";
+            weaponNames[8] = "dagger of sacrifice";
+            weaponNames[9] = "ultimate sword";
+        }
+        //set up the attack value of every weapon
+        static void SetupWeaponStats()
+        {
+            weaponStats[0] = 2;
+            weaponStats[1] = 4;
+            weaponStats[2] = 6;
+            weaponStats[3] = 8;
+            weaponStats[4] = 10;
+            weaponStats[5] = 12;
+            weaponStats[6] = 14;
+            weaponStats[7] = 16;
+            weaponStats[8] = 18;
+            weaponStats[9] = 9001;
+        }
+        //set up the intro story that the user reads upon entering a new room
+        static void SetupStories()
+        {
+            stories[0] = "Welcome to the first room! (Every time you enter a new room you can open your inventory and attempt to use an item) " +
+                "The room is cold and damp. There is a large black object that appears to be moving at the other side of the room.";
+            stories[1] = "You enter the second room. There is a skeleton on the floor. Dark mist floats around the skeleton.";
+            stories[2] = "You enter the third room. There is a glass box that you can't seem to break with your fist. You see a bunch of very large " +
+                "cobwebs among the ceiling.";
+            stories[3] = "You enter the fourth room. The room is so big and empty. If only there was something that could let you see what's really there."
+                + " You also hear a loud howl";
+            stories[4] = "You enter the fifth room. The room is mostly illuminated, but a corner of the room is pitch black. You feel a chilly aura.";
+            stories[5] = "You enter the sixth room. There is a small goblin off to the side of the room. He's holding something large and shiny, but he won't" +
+                " give it to you. You also feel a dark and spooky presence.";
+            stories[6] = "You enter the seventh room. There is a deep dark pit to your right. Ahead of you is a large abnormally-shaped pile of obsidian.";
+            stories[7] = "You enter the eighth room. There is a relatively thin wall of rock to your left. Your hair sticks up.";
+            stories[8] = "You enter the ninth room. There is a very small tunnel that only an ant can fit through. Muttering voices fill your head.";
+            stories[9] = "You enter the tenth and final room. There is a golden case in the middle of the room that contains an extremely shiny sword.";
+        }
+        //simulate a battle between the player and the room monster
+        static void Battle()
+        {
+            Console.WriteLine("The " + monsterNames[roomNumber - 1] + " appeared");
+            //reset the player's health
+            health = MAX_HEALTH;
+
+            //local variable to store monster health
+            int monsterHealth;
+            //if the room is the final boss room, make the monster health 999
+            if (roomNumber == 10)
+            {
+                monsterHealth = 999;
+            }
+            //if the room is just an ordinary room, make the monster health the room number times 10
+            else
+            {
+                monsterHealth = BASE_MONSTER_HEALTH * roomNumber;
+            }
+            Console.WriteLine("You have " + health + " health");
+            Console.WriteLine("The " + monsterNames[roomNumber - 1] + " has " + monsterHealth + " health");
+            //The monster and player keep attacking each other until either one dies
+            do
+            {
+                Console.WriteLine("\r\n");
+                monsterHealth = CalculateEnemyHealth(monsterHealth);
+
+                if (monsterHealth <= 0)
+                {
+                    monsterHealth = 0;
+                    Console.WriteLine("The " + monsterNames[roomNumber - 1] + " has been slain!");
+                    break;
+                }
+                health = CalculatePlayerHealth();
+            } while (monsterHealth > 0 && health > 0);
+            //if the player lived, the room number goes up
+            if (health > 0)
+            {
+
+                //You advance to the next room
+                roomNumber++;
+                //If your room number is 2, you gain a new weapon
+                if (roomNumber == 2)
+                {
+                    Console.WriteLine("\r\nYou found a dagger!");
+
+                    weapon = roomNumber - 1;
+                    Console.WriteLine("This is the weapon: " + weapon);
+                }
+            }
+            //If you died you get defeat message
+            else
+            {
+                Console.WriteLine("You have failed, you miserable pleb... git gud");
+                Console.Read();
+            }
+        }
+        //calculates and returns the enemy's health after the player attacks  
+        static int CalculateEnemyHealth(int enemyHealth)
+        {
+            //subtract the player's current attack power from the monster's health
+            enemyHealth -= weaponStats[weapon];
+            Console.WriteLine("You did " + weaponStats[weapon] + " damage to the " + monsterNames[roomNumber - 1] + " !");
+            Console.WriteLine("The enemy health has " + enemyHealth + " health");
+            return enemyHealth;
+        }
+        //calculates and returns the player health after the enemy attacks
+        static int CalculatePlayerHealth()
+        {
+            //subtract the monster's static attack from the player's health
+            health -= MONSTER_ATTACK;
+            Console.WriteLine("The " + monsterNames[roomNumber - 1] + " did " + MONSTER_ATTACK + " damage to you!");
+            Console.WriteLine("You have " + health + " health left");
+            return health;
+
+        }
+
+        //allows the user to open their inventory and select an item; returns the item
+        static string OpenInventory()
+        {
+
+            Console.WriteLine("\r\n");
+            //cycle through the player's inventory and print out each item as a list
+            for (int i = 0; i < inventorySize; i++)
+            {
+                Console.WriteLine((i + 1) + " " + itemsInventory[i] + "\r\n");
+            }
+
+            //local string to store the item the player wants to use
+            string useItem;
+            Console.WriteLine("Type item you want to use");
+            useItem = Console.ReadLine();
+            useItem = useItem.ToLower();
+            for (int i = 0; i < itemsInventory.Length; i++)
+            {
+                //if the user input equals an item on the user inventory, break the for loop
+                if (useItem == itemsInventory[i])
+                {
+                    break;
+                }
+                //if none of the items on the user inventory equal the user input, no item was used
+                else if (i == itemsInventory.Length - 1)
+                {
+                    useItem = null;
+                    Console.WriteLine("That's not a valid option");
+                }
+
+            }
+            //return the item used
+            return useItem;
+
+
+        }
+        //gives the user an option to either pick an item from their inventory or fight a monster
+        static void GameInterface()
+        {
+            //local string to store the user's choice
+            string userInput = "";
+            //local bool to store whether or not a fight has been initiated
+            bool fight = false;
+            //stores whether or not the user has used their one chance to pick an item
+            bool chanceUsed = false;
+
+            //if the room number is 10, initiate the special actions for that room
+            if (roomNumber == 10)
+            {
+                Room10();
+            }
+            //if it is just the other rooms, perform the ordinary actions
+            else
+            {
+                //add the item designated for the that specific room
+                itemsInventory[inventorySize] = itemList[roomNumber - 1];
+                //increase the size of the inventory
+                inventorySize++;
+                //print out the story for when you enter the room
+                Console.WriteLine("\r\n" + stories[roomNumber - 1]);
+                Console.WriteLine("\r\nYou found a " + itemsInventory[roomNumber - 1] + "!");
+                //allow the user to choose options until a fight is initiated
+                do
+                {
+                    //allow the user to open their inventory or fight the next monster
+                    Console.WriteLine("\r\n");
+                    Console.WriteLine("Select what to do");
+                    Console.WriteLine("\r\n");
+                    Console.WriteLine("Open item inventory: A");
+                    Console.WriteLine("Fight monster: B");
+                    userInput = Console.ReadLine();
+                    userInput = userInput.ToUpper();
+                    //if the user did not choose a valid option, tell them
+                    if (userInput != "A" && userInput != "B")
+                    {
+                        Console.WriteLine("That was not an option");
+                        userInput = null;
+                    }
+                    //if the user chose option A, open the inventory
+                    else if (userInput == "A")
+                    {
+                        //if the user attempts to open their inventory when they already used up their chance, go to battle
+                        if (chanceUsed == true)
+                        {
+                            Console.WriteLine("The monster has noticed your presence, prepare for battle!");
+                            fight = true;
+                            Battle();
+                        }
+                        //if the user hasn't used their chance yet, allow them to open their inventory
+                        else
+                        {
+
+                            itemUsed = OpenInventory();
+                            //if the item selected is an actual item, check the item depending on room number
+                            if (itemUsed != null)
+                            {
+                                RoomChecker();
+                                chanceUsed = true;
+                            }
+                        }
+                    }
+                    //if the user chose option B, initiate a battle
+                    else if (userInput == "B")
+                    {
+                        fight = true;
+                        Battle();
+                    }
+
+                } while (fight == false);
+            }
+        }
+        //checks if the user has used the correct item
+        static void RoomChecker()
+        {
+            //if the current room is room 1 or 2, nothing happens
+            if (roomNumber < 3)
+            {
+                Console.WriteLine("Nothing happened");
+
+            }
+            //if the room is room 3 - 10, it checks if the item to be used
+            else
+            {
+                //if the item the player selected is correct, the player gains the weapon from that room,
+                //and the item is removed from the inventory
+                if (itemUsed == itemToBeUsed[roomNumber - 3])
+                {
+                    //cycles through every item of the inventory   
+                    for (int i = 0; i < itemsInventory.Length; i++)
+                    {
+                        //if the item is the correct item, remove it from the inventory
+                        if (itemsInventory[i] == itemToBeUsed[roomNumber - 3])
+                        {
+                            itemsInventory[i] = null;
+                            //cycle through the new blank space and the end of the inventory
+                            for (int j = i; j < itemsInventory.Length - 1; j++)
+                            {
+                                //shift the items over to fill the blank space
+                                itemsInventory[j] = itemsInventory[j + 1];
+
+                            }
+                            //clear the last item of the list
+                            itemsInventory[inventorySize] = null;
+                            //decrease the inventory size
+                            inventorySize--;
+                            //break the loop
+                            break;
+
+                        }
+                    }
+                    //print out the result from using the correct item
+                    Console.WriteLine(itemResult[roomNumber - 3]);
+                    Console.WriteLine("The item was used!");
+                    //replace the user's weapon with the new one.
+                    weapon = roomNumber - 1;
+
+                }
+                //if the incorrect item was used, print out that nothing happened
+                else
+                {
+                    Console.WriteLine("Nothing happened");
+
+                }
+            }
+        }
+        //final boss room
+        static void Room10()
+        {
+            //local string to store user input
+            string userInput = "";
+            //the menu loops until the user chooses a valid selection
+            do
+            {
+                Console.WriteLine("You see a weird pendant on the floor. You feel it call to you, but it has a strange aura. Do you pick it up?\r\nY/N   ?");
+                userInput = Console.ReadLine().ToLower();
+                //if the user chose to pick up the pendant, add it to their inventory
+                if (userInput == "y")
+                {
+                    Console.WriteLine("You picked up the pendent!");
+                    itemsInventory[roomNumber - 1] = itemList[roomNumber - 1];
+                }
+                //if the user chose not to pick up the pendant, nothing happens
+                else if (userInput == "n")
+                {
+                    Console.WriteLine("You did not pick up the pendent!");
+                }
+                //if they did not choose yes or no, tell the user that their option is invalid
+                else
+                {
+                    Console.WriteLine("That isn't a valid selection!");
+                }
+            } while (userInput != "n" && userInput != "y");
+            //cycles through the user's inventory
+            for (int i = 0; i < itemsInventory.Length; i++)
+            {
+                //if the mysterious talisman is in the inventory, tell the user that they cannot obtain the sword
+                if (itemsInventory[i] == "mysterious talisman")
+                {
+                    Console.WriteLine("The talisman vibrates. It doesn't let you approach the sword. The golden case fades away. The ultimate anime god of life and death appears.");
+                    break;
+                }
+                //if the talisman does not exist, the user gains the sword
+                else if (i == itemsInventory.Length - 1)
+                {
+                    Console.WriteLine("The sword floats towards you and you grasp it.\r\nYou received the ultimate sword!");
+                    weapon = roomNumber - 1;
+                }
+            }
+            //initiate the battle
+            Battle();
+            //give the user a short victory message if they win
+
+            if (health > 0)
+            {
+                Console.WriteLine("Congratulations! You have freed yourself from the dungeon!!");
+                Console.Read();
+            }
+
+        }
+    }
+}
